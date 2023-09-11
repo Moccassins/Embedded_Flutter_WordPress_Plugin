@@ -1,44 +1,76 @@
 <?php
 /*
 Plugin Name: my_flutter_app
-Description: A Plugin that hosts an Flutter App as embedded component in WordPress.
+Description: A Plugin that hosts an Flutter App as embedded component in WordPress, also supports Divi Builder.
 Version: 1.0
 Author: Your Name
 */
 
-function flutter_wpplugin_shortcode($atts)
-{
-    $pluginDirectory = plugin_dir_path(__FILE__);
-    $flutterDirectory = $pluginDirectory . 'flutter_app/';
-    $atts = shortcode_atts(array(
-        'width' => '100%',
-        'height' => '100%',
-    ), $atts);
+// Define constants for plugin's metadata.
+define('PLUGIN_AUTHOR', 'Your Name');
+define('PLUGIN_NAME', 'My Flutter App');
+define('PLUGIN_ID', 'my_flutter_app');
+define('PLUGIN_URI', 'yourpage.com');
 
-    $output = sprintf('<div class="flutter-app-container" id="flutter_target" style="width: %s; height: %s;"></div>', $atts['width'], $atts['height']);
-    // Currently it seems to be necessary to set the plugin path here and reusing it in the flutter.js file.
-    // When the "assetBase" parameter is working in an later Flutter Release, it should be set using this parameter.
-    $output .= sprintf('<script>window.flutterPluginPath = "%s";</script>', $flutterDirectory);
-    $output .= sprintf('<script src="%s"></script>', $flutterDirectory . 'flutter.js');
-    $output .= sprintf('<script>
-        window.addEventListener("load", function (ev) {
-          // Embed flutter into div#flutter_target
-          let target = document.querySelector("#flutter_target");
-          window.onload = function() {
-            _flutter.loader.loadEntrypoint({
-                onEntrypointLoaded: async function (engineInitializer) {
-                let appRunner = await engineInitializer.initializeEngine({
-                    hostElement: target,
-                    assetBase: "%s",
-                });
-                await appRunner.runApp();
-                },
-            });
-          };
-        });
-      </script>', $flutterDirectory);
-    $output .= '</div>';
+// prepare plugin for usage
+function enqueue_flutter_scripts()
+{
+    $pluginDirectory = plugin_dir_url(__FILE__);
+    $flutterAppDirectory = $pluginDirectory . 'flutter_app/';
+
+    //register scripts
+    wp_register_script('flutter-main', $flutterAppDirectory . 'flutter.js', array(), null, true);
+    wp_register_script('flutter-loader', $pluginDirectory . 'js/flutter-loader.js', array(), null, true);
+
+    // pass path data to script
+    wp_localize_script('flutter-loader', 'flutterData', array(
+        'flutterPluginPath' => $flutterAppDirectory
+    ));
+
+    // enqueue scripts
+    wp_enqueue_script('flutter-main');
+    wp_enqueue_script('flutter-loader');
+}
+add_action('wp_enqueue_scripts', 'enqueue_flutter_scripts');
+
+// generate the flutter div container
+function generate_flutter_container($width, $height)
+{
+    if (!isset($width) || !isset($height)) {
+        return 'Error: width and height are required!';
+    }
+
+    //loading additional args
+    $args = func_get_args();
+
+    //remove width and height from args
+    array_shift($args);
+    array_shift($args);
+
+    $output = sprintf('<div class="%1$s" id="%1$s" style="width: %2$s; height: %3$s;"></div>', PLUGIN_ID, $width, $height);
+
 
     return $output;
 }
-add_shortcode('my_flutter_app', 'flutter_wpplugin_shortcode');
+
+// add wordpress shorcode
+function flutter_wpplugin_shortcode($atts)
+{
+    $atts = shortcode_atts(array(
+        'width' => '300',
+        'height' => '300',
+    ), $atts);
+
+    return generate_flutter_container($atts['width'], $atts['height']);
+}
+add_shortcode(PLUGIN_ID, 'flutter_wpplugin_shortcode');
+
+// add divi module
+function initialize_flutter_divi_module()
+{
+    $module_file_path = get_template_directory() . '/includes/builder/module/Flutter_Divi_Module.php';
+    if (!class_exists('Flutter_Divi_Module') && file_exists($module_file_path)) {
+        require_once $module_file_path;
+    }
+}
+add_action('et_builder_ready', 'initialize_flutter_divi_module');
