@@ -6,6 +6,8 @@ Version: 1.0
 Author: Your Name
 */
 
+namespace MyFlutterApp;
+
 // Define constants for plugin's metadata.
 define('PLUGIN_AUTHOR', 'Your Name');
 define('PLUGIN_NAME', 'My Flutter App');
@@ -15,23 +17,37 @@ define('PLUGIN_URI', 'yourpage.com');
 // prepare plugin for usage
 function enqueue_flutter_scripts()
 {
+    if (!is_page_or_post_using_flutter()) {
+        return;
+    }
+
     $pluginDirectory = plugin_dir_url(__FILE__);
     $flutterAppDirectory = $pluginDirectory . 'flutter_app/';
 
+    $flutterData = array(
+        'flutterPluginPath' => $flutterAppDirectory,
+        'pluginId' => PLUGIN_ID
+    );
+
     //register scripts
     wp_register_script('flutter-main', $flutterAppDirectory . 'flutter.js', array(), null, true);
-    wp_register_script('flutter-loader', $pluginDirectory . 'js/flutter-loader.js', array(), null, true);
+    wp_register_script('flutter-loader', $pluginDirectory . 'js/flutter_loader.js', array(), null, true);
 
     // pass path data to script
-    wp_localize_script('flutter-loader', 'flutterData', array(
-        'flutterPluginPath' => $flutterAppDirectory
-    ));
+    wp_localize_script('flutter-main', 'flutterData', $flutterData);
+    wp_localize_script('flutter-loader', 'flutterData', $flutterData);
 
     // enqueue scripts
     wp_enqueue_script('flutter-main');
     wp_enqueue_script('flutter-loader');
 }
-add_action('wp_enqueue_scripts', 'enqueue_flutter_scripts');
+add_action('wp_footer', 'MyFlutterApp\enqueue_flutter_scripts');
+
+function is_page_or_post_using_flutter()
+{
+    global $post;
+    return is_a($post, 'WP_Post') && has_shortcode($post->post_content, PLUGIN_ID);
+}
 
 // generate the flutter div container
 function generate_flutter_container($width, $height)
@@ -40,6 +56,10 @@ function generate_flutter_container($width, $height)
         return 'Error: width and height are required!';
     }
 
+    static $counter = 0; // Hinzufügen des Zählers
+    $counter++;
+    $id = PLUGIN_ID . '_' . $counter;
+
     //loading additional args
     $args = func_get_args();
 
@@ -47,8 +67,7 @@ function generate_flutter_container($width, $height)
     array_shift($args);
     array_shift($args);
 
-    $output = sprintf('<div class="%1$s" id="%1$s" style="width: %2$s; height: %3$s;"></div>', PLUGIN_ID, $width, $height);
-
+    $output = sprintf('<div class="%s" id="%s" style="width: %s; height: %s;"></div>', PLUGIN_ID, $id, $width, $height);
 
     return $output;
 }
@@ -63,14 +82,13 @@ function flutter_wpplugin_shortcode($atts)
 
     return generate_flutter_container($atts['width'], $atts['height']);
 }
-add_shortcode(PLUGIN_ID, 'flutter_wpplugin_shortcode');
+add_shortcode(PLUGIN_ID, 'MyFlutterApp\flutter_wpplugin_shortcode');
 
 // add divi module
-function initialize_flutter_divi_module()
+function flutter_divi_initialize_module()
 {
-    $module_file_path = get_template_directory() . '/includes/builder/module/Flutter_Divi_Module.php';
-    if (!class_exists('Flutter_Divi_Module') && file_exists($module_file_path)) {
-        require_once $module_file_path;
+    if (class_exists('ET_Builder_Module')) {
+        include(plugin_dir_path(__FILE__) . 'flutter_divi_module.php');
     }
 }
-add_action('et_builder_ready', 'initialize_flutter_divi_module');
+add_action('et_builder_ready', 'MyFlutterApp\flutter_divi_initialize_module');
