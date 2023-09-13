@@ -13,7 +13,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Jetzt werden alle gefundenen Ziele durchlaufen
+    /** 
+     *  currently there is a restriction that there can only be one instance of a flutter application per page.
+     *  this is because the flutter engine currently accesses static properties on the window to manage the state of the application. 
+     *  multiple instances would lead to conflicts. the problem is known. @see: https://github.com/flutter/flutter/issues/121374
+     */
     targets.forEach(target => {
         if (!target) {
             console.error("Flutter target was not found!");

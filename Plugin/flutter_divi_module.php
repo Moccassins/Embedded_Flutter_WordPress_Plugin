@@ -6,22 +6,30 @@ namespace MyFlutterApp;
 class Flutter_Divi_Module extends \ET_Builder_Module
 {
     // Unique slug for the module.
-    public $slug = PLUGIN_ID;
+    public $slug;
+
+    // Metadata about the module's creator and associated page.
+    protected $module_credits;
+
+    public function __construct()
+    {
+        $this->slug = 'divi_' . PluginConfig::get('id');
+        $this->module_credits = array(
+            'module_uri' => PluginConfig::get('uri'),
+            'author' => PluginConfig::get('author'),
+            'author_uri' => PluginConfig::get('uri'),
+        );
+
+        parent::__construct(); // calling base constructor
+    }
 
     // Enable support for Divi's visual builder.
     public $vb_support = 'on';
 
-    // Metadata about the module's creator and associated page.
-    protected $module_credits = array(
-        'module_uri' => PLUGIN_URI,
-        'author' => PLUGIN_AUTHOR,
-        'author_uri' => PLUGIN_URI,
-    );
-
     // Initialize the module; set the module's name.
     public function init()
     {
-        $this->name = esc_html__(PLUGIN_NAME, 'et_builder');
+        $this->name = esc_html__(PluginConfig::get('name'), 'et_builder');
     }
 
     // Define the fields that the module will accept.
@@ -33,7 +41,7 @@ class Flutter_Divi_Module extends \ET_Builder_Module
                 'label' => esc_html__('Breite', 'et_builder'),
                 'type' => 'text',
                 'description' => esc_html__('Breite des Quadrats eingeben.', 'et_builder'),
-                'default' => '100px',
+                'default' => '300px',
                 'option_category' => 'layout',
             ),
             // Height attribute for the Flutter App's container.
@@ -41,7 +49,7 @@ class Flutter_Divi_Module extends \ET_Builder_Module
                 'label' => esc_html__('Höhe', 'et_builder'),
                 'type' => 'text',
                 'description' => esc_html__('Höhe des Quadrats eingeben.', 'et_builder'),
-                'default' => '100px',
+                'default' => '300px',
                 'option_category' => 'layout',
             ),
         );
