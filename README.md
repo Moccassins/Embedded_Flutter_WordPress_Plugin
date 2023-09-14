@@ -9,6 +9,7 @@ This Feature was announced in the Flutter Summit of 2023. You can rewatch the re
 - [Configuration](#configuration)
 - [Installation](#installation)
 - [Limitations](#limitations)
+- [Further Information](#further-information)
 - [Contributing](#contributing)
 - [License](#license)
 
