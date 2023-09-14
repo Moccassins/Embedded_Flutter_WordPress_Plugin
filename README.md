@@ -2,7 +2,7 @@
 This plugin allows you to render a Flutter application within WordPress as an embedded component. It's designed to be generic, enabling developers to easily clone, enrich with their own Flutter application, and extend as needed.
 This Feature was announced in the Flutter Summit of 2023. You can rewatch the relevant part here:
 
-[![Video Name](https://img.youtube.com/vi/zKQYGKAe5W8/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID](https://www.youtube.com/live/zKQYGKAe5W8?si=YWBKOAiITJ6HLtg9&t=5796))
+[![Video Name](https://img.youtube.com/vi/zKQYGKAe5W8/0.jpg)](https://www.youtube.com/live/zKQYGKAe5W8?si=YWBKOAiITJ6HLtg9&t=5796))
 
 ## Table of Contents
 
