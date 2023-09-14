@@ -4,6 +4,8 @@ This Feature was announced in the Flutter Summit of 2023. You can rewatch the re
 
 [![Video Name](https://img.youtube.com/vi/zKQYGKAe5W8/0.jpg)](https://www.youtube.com/live/zKQYGKAe5W8?si=YWBKOAiITJ6HLtg9&t=5796)
 
+The demo app presented in that Video can be found here: https://flutter-forward-demos.web.app/#/
+
 ## Table of Contents
 
 - [Configuration](#configuration)
