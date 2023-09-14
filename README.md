@@ -1,25 +1,16 @@
 # Embedded Flutter WordPress Plugin
 This plugin allows you to render a Flutter application within WordPress as an embedded component. It's designed to be generic, enabling developers to easily clone, enrich with their own Flutter application, and extend as needed.
+This Feature was announced in the Flutter Summit of 2023. You can rewatch the relevant part here:
 
----
-
-# This Readme file is currently a work in progress. For this reason anything below is mostly a placeholder just to show me how to use the markup.
-
----
+[![Video Name](https://img.youtube.com/vi/zKQYGKAe5W8/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID](https://www.youtube.com/live/zKQYGKAe5W8?si=YWBKOAiITJ6HLtg9&t=5796))
 
 ## Table of Contents
 
-- [Usage](#usage)
 - [Configuration](#configuration)
 - [Installation](#installation)
 - [Limitations](#limitations)
 - [Contributing](#contributing)
 - [License](#license)
-
-## Usage
-
-1. Download the plugin and install it in your WordPress directory under `wp-content/plugins/`.
-2. Activate the plugin through the WordPress admin panel.
 
 ## Configuration
 
@@ -44,20 +35,30 @@ dont forget to adjust the Namespace of the PHP files and includes!
 
 ## Installation
 
-Explain how other developers can customize the plugin to use with their own Flutter application:
+After the configuration and customization is done, you can install the Plugin in an WordPress Website as follows:
 
-1. Clone this repository.
-2. Replace the sample Flutter application in the `flutter-app/` directory with your own.
-3. Make any other desired customizations.
-4. Package and install the plugin as described above.
+1. Zip the folder that Contains your Plugin. You can for example just zip the Sample folder from this repository.
+2. Login to your WordPress Website and switch to the Plugins Tab.
+3. Upload the Zip file and activate the plugin.
+4. On the place you want to add The Plugin, you can currently add the Plugin by using the shortcode you have configured.
+   For the sample application it would be `[my_flutter_app]` on a pure WordPress. If you are using Divi, you could just add
+   the created My Flutter App Module. There arent any further Configuration posibilitys in the Sample plugin besides width and height which are defaulted to 300px.
 
 ## Limitations
 
 Since the whole embedded feature in Flutter is still in beta status, there are of course a few restrictions.
 
-1. Currently only one Flutter application can be hosted per page/post. No matter if in the header, body or footer. Only one and only one instance of the application is possible. Adding multiple shortcodes will only result in one of the shortcodes being used. This is because Flutter itself defines constants on the window, which would lead to conflicts if instanced multiple times. The problem is already known to the Flutter team. No timeframe for a solution has been announced yet. More details here: https://github.com/flutter/flutter/issues/121374
+1. Currently only one Flutter application can be hosted per page/post. No matter if in the header, body or footer. Only one application and also only one instance of the application is possible.
+   Adding multiple shortcodes will only result in one of the shortcodes being used. This is because Flutter itself defines constants on the window, which would lead to conflicts if instanced multiple times.
+   The problem is already known to the Flutter team. No timeframe for a solution has been announced yet. More details here: https://github.com/flutter/flutter/issues/121374
 
-2. This all works only in Flutter and Dart up from version 3. currently the beta channel should be used until the Flutter team has merged everything into the stable.
+3. This all works only in Flutter and Dart up from version 3. currently the beta channel should be used until the Flutter team has merged everything into the stable.
+
+## Further Information
+
+There are additional interoperabilitys between the Flutter code and your existing Website using JavaScript that i dont have covered. You can watch these Video for further Information about that:
+
+[![Video Name](https://img.youtube.com/vi/3HdTJPd6eZc/0.jpg)](https://www.youtube.com/watch?v=3HdTJPd6eZc)
 
 
 ## Contributing
