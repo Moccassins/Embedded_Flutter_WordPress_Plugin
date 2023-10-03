@@ -8,11 +8,13 @@ Author: Your Name
 
 namespace MyFlutterApp;
 
+require_once plugin_dir_path(__FILE__) . 'plugin_config.php';
+
 // Define constants for plugin's metadata.
-define('PLUGIN_AUTHOR', 'Your Name');
-define('PLUGIN_NAME', 'My Flutter App');
-define('PLUGIN_ID', 'my_flutter_app');
-define('PLUGIN_URI', 'yourpage.com');
+PluginConfig::set('author', 'Your Name');
+PluginConfig::set('name', 'My Flutter App');
+PluginConfig::set('id', 'my_flutter_app');
+PluginConfig::set('uri', 'yourpage.com');
 
 // prepare plugin for usage
 function enqueue_flutter_scripts()
@@ -26,7 +28,7 @@ function enqueue_flutter_scripts()
 
     $flutterData = array(
         'flutterPluginPath' => $flutterAppDirectory,
-        'pluginId' => PLUGIN_ID
+        'pluginId' => PluginConfig::get('id')
     );
 
     //register scripts
@@ -46,7 +48,7 @@ add_action('wp_footer', 'MyFlutterApp\enqueue_flutter_scripts');
 function is_page_or_post_using_flutter()
 {
     global $post;
-    return is_a($post, 'WP_Post') && has_shortcode($post->post_content, PLUGIN_ID);
+    return is_a($post, 'WP_Post') && (has_shortcode($post->post_content, PluginConfig::get('id')) || has_shortcode($post->post_content, 'divi_' . PluginConfig::get('id')));
 }
 
 // generate the flutter div container
@@ -58,7 +60,7 @@ function generate_flutter_container($width, $height)
 
     static $counter = 0; // Hinzufügen des Zählers
     $counter++;
-    $id = PLUGIN_ID . '_' . $counter;
+    $id = PluginConfig::get('id') . '_' . $counter;
 
     //loading additional args
     $args = func_get_args();
@@ -67,7 +69,7 @@ function generate_flutter_container($width, $height)
     array_shift($args);
     array_shift($args);
 
-    $output = sprintf('<div class="%s" id="%s" style="width: %s; height: %s;"></div>', PLUGIN_ID, $id, $width, $height);
+    $output = sprintf('<div class="%s" id="%s" style="width: %s; height: %s;"></div>', PluginConfig::get('id'), $id, $width, $height);
 
     return $output;
 }
@@ -76,13 +78,13 @@ function generate_flutter_container($width, $height)
 function flutter_wpplugin_shortcode($atts)
 {
     $atts = shortcode_atts(array(
-        'width' => '300',
-        'height' => '300',
+        'width' => '300px',
+        'height' => '300px',
     ), $atts);
 
     return generate_flutter_container($atts['width'], $atts['height']);
 }
-add_shortcode(PLUGIN_ID, 'MyFlutterApp\flutter_wpplugin_shortcode');
+add_shortcode(PluginConfig::get('id'), 'MyFlutterApp\flutter_wpplugin_shortcode');
 
 // add divi module
 function flutter_divi_initialize_module()
