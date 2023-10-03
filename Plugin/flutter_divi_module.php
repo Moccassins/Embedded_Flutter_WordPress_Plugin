@@ -34,21 +34,21 @@ class Flutter_Divi_Module extends \ET_Builder_Module
 
     // Define the fields that the module will accept.
     public function get_fields()
-    {
+    {        
         return array(
             // Width attribute for the Flutter App's container.
             'width' => array(
-                'label' => esc_html__('Breite', 'et_builder'),
+                'label' => esc_html__('Width', 'et_builder'),
                 'type' => 'text',
-                'description' => esc_html__('Breite des Quadrats eingeben.', 'et_builder'),
+                'description' => esc_html__('Width of the container.', 'et_builder'),
                 'default' => '300px',
                 'option_category' => 'layout',
             ),
             // Height attribute for the Flutter App's container.
             'height' => array(
-                'label' => esc_html__('Höhe', 'et_builder'),
+                'label' => esc_html__('Height', 'et_builder'),
                 'type' => 'text',
-                'description' => esc_html__('Höhe des Quadrats eingeben.', 'et_builder'),
+                'description' => esc_html__('Height of the container.', 'et_builder'),
                 'default' => '300px',
                 'option_category' => 'layout',
             ),
